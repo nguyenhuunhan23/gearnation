@@ -28,6 +28,31 @@
     <style>
         
     </style>
+    <script>
+        $(document).ready(function(){
+            $('.btn-add').click(function(){
+                var product_id = $(this).attr("id");
+                var product_name = $('#TenSP'+product_id+'').val();
+                var product_price = $('#GiaDonVi'+product_id+'').val();
+                var product_image = $('#HinhDaiDien'+product_id+'').val();
+                var product_quantity = 1;
+                var action = "add";
+                if(product_quantity > 0)
+                {
+                    $.ajax({
+                        url:"action.php",
+                        method:"POST",
+                        data:{MaSP:product_id, TenSP:product_name, GiaDonVi:product_price, SoLuong:product_quantity, action:action, HinhDaiDien:product_image},
+                        success:function(data)
+                        {
+                            alert("Item has been Added into Cart");
+                        }
+                    });
+                }	
+	        });
+        })
+    
+    </script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background-color: white;">
@@ -50,32 +75,6 @@
                         <a class="dropdown-item" href="keyboard_corsair.php">Corsair</a>
                         <a class="dropdown-item" href="keyboard_leopold.php">Leopold</a>
                         <!-- <div class="dropdown-divider">Leopold</div>
-                        <a class="dropdown-item" href="#">Something else here</a>-->
-                    </div>
-                </li>
-                <!-- Drop down mouse-->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Mouse
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="mouse_asus.php">Asus</a>
-                        <a class="dropdown-item" href="mouse_logitech.php">Logitech</a>
-                        <a class="dropdown-item" href="mouse_zowie.php">Zowie</a>
-                        <!--<div class="dropdown-divider">Logitech</div>
-                        <a class="dropdown-item" href="#">Something else here</a>-->
-                    </div>
-                </li>
-                <!-- Drop down headphone-->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Headphone
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="headphone_asus.php">Asus</a>
-                        <a class="dropdown-item" href="headphone_corsair.php">Corsair</a>
-                        <a class="dropdown-item" href="headphone_hyperxhtml">HyperX</a>
-                        <!-- <div class="dropdown-divider">Logitech</div>
                         <a class="dropdown-item" href="#">Something else here</a>-->
                     </div>
                 </li>
@@ -142,101 +141,31 @@
         <div class="row">
             <div class="owl-carousel owl-theme">
                 <?php
-                    while ($row = $result->fetch_assoc()){
-                        $imagelinks = explode(" , ",$row["CacHinhAnh"]);
+                    while ($product = $result->fetch_assoc()){
+                        $imagelinks = explode(" , ",$product["CacHinhAnh"]);
                 ?>
                 <div class="item">
                     <div class="card">
-                        <a href="product-detail.php?MaSP=<?php echo $row["MaSP"]; ?>"><img src="<?php echo $imagelinks[0]; ?>" alt="img" class="card-img-top"></a>
+                        <a href="product-detail.php?MaSP=<?php echo $product["MaSP"]; ?>"><img src="<?php echo $imagelinks[0]; ?>" alt="img" class="card-img-top"></a>
                         <div class="card-body">
-                            <span class="product-title"><?php echo $row["TenSP"]; ?></span><br>
-                            <span class="text-center"><?php echo $row["GiaDonVi"]; ?></span></span><br>
-                            <button class="btn btn-secondary btn-sm btn-add" onclick="window.location.href='index.php?page=product&action=add&MaSP=<?php echo $row['MaSP']; ?>'">Add to cart</button>
-                        </div>
+                            
+                            <span class="product-title"><?php echo $product["TenSP"]; ?></span><br>
+                            <span class="text-center"><?php echo $product["GiaDonVi"]; ?></span></span><br>
+                            <a href="" class="btn btn-secondary btn-sm btn-add" id="<?php echo $product['MaSP']?>">Add to cart
+                                <input type="hidden" name="TenSP" id="TenSP<?php echo $product['MaSP']; ?>" value="<?php echo $product["TenSP"]; ?>">
+                                <input type="hidden" name="GiaDonVi" id="GiaDonVi<?php echo $product['MaSP']; ?>" value="<?php echo $product["GiaDonVi"]; ?>">
+                                <input type="hidden" name="HinhDaiDien" id="HinhDaiDien<?php echo $product['MaSP']; ?>" value="<?php echo $imagelinks[0]; ?>">
+                            </a>
+                        </div>  
                     </div>
                 </div>
                 <?php
                     }
-                    }
+        }
                 ?>
             </div>
         </div>
     </div>
-
-    <!--Product Slider 2--> 
-    <?php
-        $sql = "SELECT * FROM product WHERE MaLoai=3";
-        $result = $conn->query($sql);
-
-        if ($result->num_rows > 0) {
-    ?>
-    <div class="container-fluid mt-4">
-        <div class="row">
-            <h3><a href="mouse.php?MaLoai=3">Mouse</a></h3>
-        </div>
-    </div>
-    <div class="container-fluid mt-4 ">
-        <div class="row">
-            <div class="owl-carousel owl-theme">
-                <?php
-                    while ($row = $result->fetch_assoc()){
-                        $imagelinks = explode(" , ",$row["CacHinhAnh"]);
-                ?>
-                <div class="item">
-                    <div class="card">
-                        <a href="product-detail.php?MaSP=<?php echo $row["MaSP"]; ?>"><img src="<?php echo $imagelinks[0]; ?>" alt="img" class="card-img-top"></a>
-                        <div class="card-body">
-                            <span class="product-title"><?php echo $row["TenSP"]; ?></span><br>
-                            <span class="text-center"><?php echo $row["GiaDonVi"]; ?></span></span><br>
-                            <button class="btn btn-secondary btn-sm btn-add">Add to cart</button>
-                        </div>
-                    </div>
-                </div>
-                <?php
-                    }
-                    }
-                ?>
-            </div>
-        </div>
-    </div>
-
-    <!--Product Slider 3-->
-    <?php
-        $sql = "SELECT * FROM product WHERE MaLoai=2";
-        $result = $conn->query($sql);
-
-        if ($result->num_rows > 0) {
-    ?>
-    <div class="container-fluid mt-4">
-        <div class="row">
-            <h3><a href="headphone.php">Headphone</a></h3>
-        </div>
-    </div>
-    <div class="container-fluid mt-4 ">
-        <div class="row">
-            <div class="owl-carousel owl-theme">
-                <?php
-                    while ($row = $result->fetch_assoc()){
-                        $imagelinks = explode(" , ",$row["CacHinhAnh"]);
-                ?>
-                <div class="item">
-                    <div class="card">
-                        <a href="product-detail.php?MaSP=<?php echo $row["MaSP"]; ?>"><img src="<?php echo $imagelinks[0]; ?>" alt="img" class="card-img-top"></a>
-                        <div class="card-body">
-                            <span class="product-title"><?php echo $row["TenSP"]; ?></span><br>
-                            <span class="text-center"><?php echo $row["GiaDonVi"]; ?></span></span><br>
-                            <button class="btn btn-secondary btn-sm btn-add">Add to cart</button>
-                        </div>
-                    </div>
-                </div>
-                <?php
-                    }
-                    }
-                ?>
-            </div>
-        </div>
-    </div>
-
     <br><br><br>
 
     <!-- Suppliers-Title -->
@@ -322,8 +251,6 @@
                             <div class="col-md-6">
                                 <p><a class="scroll-link" href="index.php">Home</a></p>
                                 <p><a href="keyboard.php">Keyboard</a></p>
-                                <p><a href="#">Mouse</a></p>
-                                <p><a href="#">Headphone</a></p>
                             </div>
                         </div>
                     </div>

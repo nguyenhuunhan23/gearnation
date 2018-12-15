@@ -25,6 +25,29 @@
     <!-- Scripts -->
     <script src="js/bootstrap.min.js"></script>
     <script>
+        $(document).ready(function(){
+            $('.btn-add').click(function(){
+                var product_id = $(this).attr("id");
+                var product_name = $('#TenSP'+product_id+'').val();
+                var product_price = $('#GiaDonVi'+product_id+'').val();
+                var product_image = $('#HinhDaiDien'+product_id+'').val();
+                var product_quantity = 1;
+                var action = "add";
+                if(product_quantity > 0)
+                {
+                    $.ajax({
+                        url:"action.php",
+                        method:"POST",
+                        data:{MaSP:product_id, TenSP:product_name, GiaDonVi:product_price, SoLuong:product_quantity, action:action, HinhDaiDien:product_image},
+                        success:function(data)
+                        {
+                            alert("Item has been Added into Cart");
+                        }
+                    });
+                }	
+	        });
+        })
+    
     </script>
 </head>
 <body>
@@ -51,32 +74,7 @@
                         <a class="dropdown-item" href="#">Something else here</a>-->
                     </div>
                 </li>
-                <!-- Drop down mouse-->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Mouse
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="mouse_asus.php">Asus</a>
-                        <a class="dropdown-item" href="mouse_logitech.php">Logitech</a>
-                        <a class="dropdown-item" href="mouse_zowie.php">Zowie</a>
-                        <!--<div class="dropdown-divider">Logitech</div>
-                        <a class="dropdown-item" href="#">Something else here</a>-->
-                    </div>
-                </li>
-                <!-- Drop down headphone-->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Headphone
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="headphone_asus.php">Asus</a>
-                        <a class="dropdown-item" href="headphone_corsair.php">Corsair</a>
-                        <a class="dropdown-item" href="headphone_hyperxhtml">HyperX</a>
-                        <!-- <div class="dropdown-divider">Logitech</div>
-                        <a class="dropdown-item" href="#">Something else here</a>-->
-                    </div>
-                </li>
+                
                 <li class="nav-item active">
                     <a class="nav-link" href="cart.php" id="cart-icon">
                         <i class="fas fa-shopping-cart"></i>
@@ -127,23 +125,25 @@
                         <div class="col-md-12 product-list">
                             <div class="row content-product-list">
                                 <?php
-                                    while ($row = $result->fetch_assoc()){
-                                        $imagelinks = explode(" , ",$row["CacHinhAnh"]);
+                                    while ($product = $result->fetch_assoc()){
+                                        $imagelinks = explode(" , ",$product["CacHinhAnh"]);
                                 ?>
-                                <div class="col-sm-3 col-xs-12 padding-none col-fix20">
-                                    <img class="card-img-top" src="<?php echo $imagelinks[0]; ?>">
+                                <div class="col-sm-3 col-xs-12 padding-none col-fix20 card-index">
+                                <a href="product-detail.php?MaSP=<?php echo $product["MaSP"]; ?>"><img class="card-img-top" src="<?php echo $imagelinks[0]; ?>"></a>
                                     <div class="card-body">
-                                        <h4 class="card-title-gear"><?php echo $row["TenSP"]; ?></h4>
+                                        <h4 class="card-title-gear"><?php echo $product["TenSP"]; ?></h4>
                                         <p class="card-text"> </p>
-                                        <h5><?php echo $row["GiaDonVi"]; ?></h5>
-                                        <a href="#" class="btn btn-outline-secondary">Add to cart </a>
+                                        <h5><?php echo $product["GiaDonVi"]; ?></h5>
+                                        <a href="" class="btn btn-secondary btn-sm btn-add" id="<?php echo $product['MaSP']?>">Add to cart
+                                            <input type="hidden" name="TenSP" id="TenSP<?php echo $product['MaSP']; ?>" value="<?php echo $product["TenSP"]; ?>">
+                                            <input type="hidden" name="GiaDonVi" id="GiaDonVi<?php echo $product['MaSP']; ?>" value="<?php echo $product["GiaDonVi"]; ?>">
+                                            <input type="hidden" name="HinhDaiDien" id="HinhDaiDien<?php echo $product['MaSP']; ?>" value="<?php echo $imagelinks[0]; ?>">
+                                        </a>
                                     </div>
                                 </div>>
                                 <?php
                                     }
-                                    } else {
-
-                                    } 
+                                    }
                                 ?>
                             </div>
                         </div>
@@ -188,8 +188,6 @@
                             <div class="col-md-6">
                                 <p><a class="scroll-link" href="#top-content">Home</a></p>
                                 <p><a href="#">Keyboard</a></p>
-                                <p><a href="#">Mouse</a></p>
-                                <p><a href="#">Headphone</a></p>
                             </div>
                         </div>
                     </div>

@@ -25,6 +25,29 @@
     <!-- Scripts -->
     <script src="js/bootstrap.min.js"></script>
     <script>
+        $(document).ready(function(){
+            $('.btn-add').click(function(){
+                var product_id = $(this).attr("id");
+                var product_name = $('#TenSP'+product_id+'').val();
+                var product_price = $('#GiaDonVi'+product_id+'').val();
+                var product_image = $('#HinhDaiDien'+product_id+'').val();
+                var product_quantity = 1;
+                var action = "add";
+                if(product_quantity > 0)
+                {
+                    $.ajax({
+                        url:"action.php",
+                        method:"POST",
+                        data:{MaSP:product_id, TenSP:product_name, GiaDonVi:product_price, SoLuong:product_quantity, action:action, HinhDaiDien:product_image},
+                        success:function(data)
+                        {
+                            alert("Item has been Added into Cart");
+                        }
+                    });
+                }	
+	        });
+        })
+    
     </script>
 </head>
 <body>
@@ -51,32 +74,7 @@
                         <a class="dropdown-item" href="#">Something else here</a>-->
                     </div>
                 </li>
-                <!-- Drop down mouse-->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Mouse
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="mouse_asus.php">Asus</a>
-                        <a class="dropdown-item" href="mouse_logitech.php">Logitech</a>
-                        <a class="dropdown-item" href="mouse_zowie.php">Zowie</a>
-                        <!--<div class="dropdown-divider">Logitech</div>
-                        <a class="dropdown-item" href="#">Something else here</a>-->
-                    </div>
-                </li>
-                <!-- Drop down headphone-->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Headphone
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="headphone_asus.php">Asus</a>
-                        <a class="dropdown-item" href="headphone_corsair.php">Corsair</a>
-                        <a class="dropdown-item" href="headphone_hyperxhtml">HyperX</a>
-                        <!-- <div class="dropdown-divider">Logitech</div>
-                        <a class="dropdown-item" href="#">Something else here</a>-->
-                    </div>
-                </li>
+                
                 <li class="nav-item active">
                     <a class="nav-link" href="cart.php" id="cart-icon">
                         <i class="fas fa-shopping-cart"></i>
@@ -94,67 +92,65 @@
     </nav>
 
      <!-- Breadcrumb -->
-     <div id="collection" class="container-fluid">
-        <div class="col-sm-12">
-            <h3 class="title-box-collection"> Razer Keyboard</h3>
-            <div class="row">
-                <div class="main-content">
-                    <div id="breadcrumb">
-                        <span class="showHere">You're at: </span>
-                        <a href="index.php" class="pathway">Homepage</a>
-                        <span><i class="fa fa-caret-right"></i></span>
-                        <a href="keyboard.php" class="pathway">Keyboard</a>
-                        <span><i class="fa fa-caret-right"></i></span>
-                        <a href="keyboard_razer.php" class="pathway">Razer Keyboard</a>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="browse-tag spull-right">
-                            <span>Sort</span>
-                            <select class="sort-by custom-dropdown_select custom-dropdown_select--white">
-                                <option value="manual">Featured products</option>
-                                <option value="manual">Low to High</option>
-                                <option value="manual">High to Low</option>
-                            </select>
+     <<div id="collection" class="container-fluid">
+            <div class="col-sm-12">
+                <h3 class="title-box-collection"> Corsair Keyboard</h3>
+                <div class="row">
+                    <div class="main-content">
+                        <div id="breadcrumb">
+                            <span class="showHere">You're at: </span>
+                            <a href="index.php" class="pathway">Homepage</a>
+                            <span><i class="fa fa-caret-right"></i></span>
+                            <a href="keyboard.php" class="pathway">Keyboard</a>
+                            <span><i class="fa fa-caret-right"></i></span>
+                            <a href="keyboard_corsair.php" class="pathway">Razer Keyboard</a>
                         </div>
-                    </div>
-                    <br>
-                    <!-- Product List -->
-                    <div class="col-md-12 product-list">
-                        <div class="row content-product-list">
-                            <div class="col-sm-3 col-xs-12 padding-none col-fix20">
-                                <img class="card-img-top" src="images/product-img/keyboard/Razer/razer blackwidow elite/1.jpg">
-                                <div class="card-body">
-                                    <h4 class="card-title-gear">RAZER HUNTSMAN ELITE</h4>
-                                    <p class="card-text"> </p>
-                                    <h5>$199.99</h5>
-                                    <a href="#" class="btn btn-outline-secondary">Add to cart </a>
-                                </div>
+                        <div class="col-md-12">
+                            <div class="browse-tag spull-right">
+                                <span>Sort</span>
+                                <select class="sort-by custom-dropdown_select custom-dropdown_select--white">
+                                    <option value="manual">Featured products</option>
+                                    <option value="manual">Low to High</option>
+                                    <option value="manual">High to Low</option>
+                                </select>
                             </div>
-                            <div class="col-sm-3 col-xs-12 padding-none col-fix20">
-                                <img class="card-img-top" src="images/product-img/keyboard/Razer/razer blackwidow x chroma mercury edition/1.jpg">
-                                <div class="card-body">
-                                    <h4 class="card-title-gear">RAZER BLACKWIDOW CHROMA VER 2</h4>
-                                    <p class="card-text"> </p>
-                                    <h5>$169.99</h5>
-                                    <a href="#" class="btn btn-outline-secondary">Add to cart </a>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-3 col-xs-12 padding-none col-fix20">
-                                <img class="card-img-top" src="images/product-img/keyboard/Razer/razer blackwidow tournament edition quat pink/1.jpg">
-                                <div class="card-body">
-                                    <h4 class="card-title-gear">RAZER BWT X CHROMA V2 QUARTZ</h4>
-                                    <p class="card-text"> </p>
-                                    <h5>$149.99</h5>
-                                    <a href="#" class="btn btn-outline-secondary">Add to cart </a>
-                                </div>
+                        </div>
+                        <br>
+                        <?php 
+                            $sql = "SELECT * FROM product WHERE MaLoai=1 AND MaNPP=5";
+                            $result = $conn->query($sql);
+                            if ($result->num_rows > 0) {
+                        ?>
+                        <!-- Product List -->
+                        <div class="col-md-12 product-list">
+                            <div class="row content-product-list">
+                                <?php
+                                    while ($product = $result->fetch_assoc()){
+                                        $imagelinks = explode(" , ",$product["CacHinhAnh"]);
+                                ?>
+                                <div class="col-sm-3 col-xs-12 padding-none col-fix20 card-index">
+                                    <a href="product-detail.php?MaSP=<?php echo $product["MaSP"]; ?>"><img class="card-img-top" src="<?php echo $imagelinks[0]; ?>"></a>
+                                    <div class="card-body">
+                                        <h4 class="card-title-gear"><?php echo $product["TenSP"]; ?></h4>
+                                        <p class="card-text"> </p>
+                                        <h5><?php echo $product["GiaDonVi"]; ?></h5>
+                                        <a href="" class="btn btn-secondary btn-sm btn-add" id="<?php echo $product['MaSP']?>">Add to cart
+                                            <input type="hidden" name="TenSP" id="TenSP<?php echo $product['MaSP']; ?>" value="<?php echo $product["TenSP"]; ?>">
+                                            <input type="hidden" name="GiaDonVi" id="GiaDonVi<?php echo $product['MaSP']; ?>" value="<?php echo $product["GiaDonVi"]; ?>">
+                                            <input type="hidden" name="HinhDaiDien" id="HinhDaiDien<?php echo $product['MaSP']; ?>" value="<?php echo $imagelinks[0]; ?>">
+                                        </a>
+                                    </div>
+                                </div>>
+                                <?php
+                                    }
+                                    }
+                                ?>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
    
     <br><br><br>
     <!-- Footer -->
@@ -192,8 +188,6 @@
                             <div class="col-md-6">
                                 <p><a class="scroll-link" href="#top-content">Home</a></p>
                                 <p><a href="#">Keyboard</a></p>
-                                <p><a href="#">Mouse</a></p>
-                                <p><a href="#">Headphone</a></p>
                             </div>
                         </div>
                     </div>

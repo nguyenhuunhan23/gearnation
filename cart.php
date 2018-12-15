@@ -1,7 +1,5 @@
-<?php
-session_start();
-require_once("config/config.php");
-
+<?php    
+    session_start();
 ?>
 
 <!DOCTYPE html>
@@ -27,18 +25,38 @@ require_once("config/config.php");
     <!-- Scripts -->
     <script src="js/bootstrap.min.js"></script>
     <script>
+        $(document).on('click', '.btn-remove', function(){
+            var product_id = $(this).attr("id");
+            var action = 'remove';
+            if(confirm("Are you sure you want to remove this product?"))
+            {
+                $.ajax({
+                    url:"action.php",
+                    method:"POST",
+                    data:{MaSP:product_id, action:action},
+                    success:function()
+                    {
+                        alert("Item has been removed from Cart");
+                    }
+                })
+            }
+            else
+            {
+                return false;
+            }
+	    });
     </script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background-color: white;">
-        <a class="navbar-brand" href="index.html"><img src="images/core-img/1x/logo_1.png"></a>
+        <a class="navbar-brand" href="index.php"><img src="images/core-img/1x/logo_1.png"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <!-- Drop down keyboard-->
                 <li class="nav-item dropdown">
@@ -46,41 +64,16 @@ require_once("config/config.php");
                     Keyboard
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="keyboard_razer.html">Razer</a>
-                        <a class="dropdown-item" href="keyboard_corsair.html">Corsair</a>
-                        <a class="dropdown-item" href="keyboard_leopold.html">Leopold</a>
+                        <a class="dropdown-item" href="keyboard_razer.php">Razer</a>
+                        <a class="dropdown-item" href="keyboard_corsair.php">Corsair</a>
+                        <a class="dropdown-item" href="keyboard_leopold.php">Leopold</a>
                         <!-- <div class="dropdown-divider">Leopold</div>
                         <a class="dropdown-item" href="#">Something else here</a>-->
                     </div>
                 </li>
-                <!-- Drop down mouse-->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Mouse
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="mouse_asus.html">Asus</a>
-                        <a class="dropdown-item" href="mouse_logitech.html">Logitech</a>
-                        <a class="dropdown-item" href="mouse_zowie.html">Zowie</a>
-                        <!--<div class="dropdown-divider">Logitech</div>
-                        <a class="dropdown-item" href="#">Something else here</a>-->
-                    </div>
-                </li>
-                <!-- Drop down headphone-->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Headphone
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="headphone_asus.html">Asus</a>
-                        <a class="dropdown-item" href="headphone_corsair.html">Corsair</a>
-                        <a class="dropdown-item" href="headphone_hyperxhtml">HyperX</a>
-                        <!-- <div class="dropdown-divider">Logitech</div>
-                        <a class="dropdown-item" href="#">Something else here</a>-->
-                    </div>
-                </li>
+                
                 <li class="nav-item active">
-                    <a class="nav-link" href="cart.html" id="cart-icon">
+                    <a class="nav-link" href="cart.php" id="cart-icon">
                         <i class="fas fa-shopping-cart"></i>
                         <span id="itemCount" data-count="0">0</span>
                     </a>
@@ -96,7 +89,7 @@ require_once("config/config.php");
     </nav>
 
     <div class="container-fluid">
-        <form action="">
+        <form action="cart.php" method="post">
         <table id="cart" class="table table-hover table-condensed">
             <thead>
                 <tr>
@@ -108,37 +101,62 @@ require_once("config/config.php");
                 </tr>
             </thead>
             <tbody>
+                <?php
+                    if(!empty($_SESSION['cart'])): 
+                        $total = 0;
+
+                        foreach ($_SESSION['cart'] as $key => $product):
+
+                ?>
                 <tr>
                     <td data-th="Product">
                         <div class="row" id="cart-product">
-                            <div class="col-sm-2 hidden-xs" ><img src="images/product-img/keyboard/Leopold/fc660m-PD/fc660m.jpg" alt="..." class="img-responsive" style="width:200px;"/></div>
+                            <div class="col-sm-2 hidden-xs" ><img src="<?php echo $product['HinhDaiDien']; ?>" alt="..." class="img-responsive" style="width:200px;"/></div>
                             <div class="col-sm-10">
-                                <h4 class="nomargin">Leopold FC660m PD</h4>
+                                <h4 class="nomargin"><?php echo $product['TenSP'] ?></h4>
                                 <p></p>
                             </div>
                         </div>
                     </td>
-                    <td data-th="Price">$199.99</td>
+                    <td data-th="Price"><p id="price<?php echo $product['MaSP'] ?>"><?php echo product_price(str_replace('.','',$product['GiaDonVi'])) ?></p></td>
                     <td data-th="Quantity">
-                        <input type="number" class="form-control text-center" value="1">
+                        <input type="number" id="quantity<?php echo $product['MaSP'] ?>" onchange="update(<?php echo $product['MaSP'] ?>)" class="form-control text-center" value="<?php echo $product['SoLuong'] ?>" name="" min="1" max="">
                     </td>
-                    <td data-th="Subtotal" class="text-center">199.99</td>
+                    <td data-th="Subtotal" class="text-center"><p id="subtotal<?php echo $product['MaSP'] ?>"><?php echo product_price($product['SoLuong']*str_replace('.','',$product['GiaDonVi'])) ?></p></td>
                     <td class="actions" data-th="">
                         <button class="btn btn-info btn-sm"><i class="fas fa-sync-alt"></i></button>
-                        <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>								
+                        <button class="btn btn-danger btn-sm btn-remove" id="<?php echo $product['MaSP'] ?>"><i class="fas fa-trash"></i></button>							
                     </td>
                 </tr>
             </tbody>
+            <?php
+                            $total += ($product['SoLuong'] * (str_replace('.','',$product['GiaDonVi'])));
+                        endforeach;
+            ?>
             <tfoot>
                 <tr class="visible-xs">
-                    <td class="text-center"><strong>Total</strong></td>
+                    <td class="text-center"><strong>Total</strong><?php echo $total ?></td>
                 </tr>
                 <tr>
                     <td><a href="index.php" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
                     <td colspan="2" class="hidden-xs"></td>
-                    <td class="hidden-xs text-center"><strong>Total $199.99</strong></td>
+                    <td class="hidden-xs text-center"><strong>Total</strong> <strong id="total"><?php echo product_price($total) ?></strong></td>
+                    <?php 
+                        if (isset($_SESSION['cart'])):
+                            if (count($_SESSION['cart']) > 0):
+                    ?>
                     <td><a href="#" class="btn btn-success btn-block">Checkout <i class="fa fa-angle-right"></i></a></td>
+                    <?php
+                            endif;
+                        endif; 
+                    else:
+                        echo "<p>Your Cart is empty. Please add some products.</p>"; 
+                    endif;
+                    ?>                  
                 </tr>
+                <?php
+                    
+                ?>
             </tfoot>
         </table></form>
         
@@ -180,8 +198,6 @@ require_once("config/config.php");
                             <div class="col-md-6">
                                 <p><a class="scroll-link" href="#top-content">Home</a></p>
                                 <p><a href="#">Keyboard</a></p>
-                                <p><a href="#">Mouse</a></p>
-                                <p><a href="#">Headphone</a></p>
                             </div>
                         </div>
                     </div>
@@ -225,5 +241,30 @@ require_once("config/config.php");
             }
         })
     </script>
+    <script>
+        function update(MaSP){
+            var preTotal = parseInt(document.getElementById("total").innerText.replace(/[^a-zA-Z0-9]/g, ''));
+            var preSubtotal = parseInt(document.getElementById("subtotal".concat(MaSP)).innerText.replace(/[^a-zA-Z0-9]/g, ''));
+            var quantity = document.getElementById("quantity".concat(MaSP)).value;
+            var price = parseInt(document.getElementById("price".concat(MaSP)).innerText.replace(/[^a-zA-Z0-9]/g, ''));
+            var curSubtotal = quantity*price;
+            var curTotal = preTotal - preSubtotal + curSubtotal;
+            document.getElementById("subtotal".concat(MaSP)).innerHTML = vnd_convert(curSubtotal);
+            document.getElementById("total").innerHTML = vnd_convert(curTotal);
+        }
+        function vnd_convert(x){
+            x = x.toLocaleString('vi', {style : 'currency', currency : 'VND'});
+            return x;
+        }
+    </script>
+    <?php
+        function product_price($priceFloat) {
+            $symbol = ' đ';
+            $symbol_thousand = '.';
+            $decimal_place = 0;
+            $price = number_format($priceFloat, $decimal_place, '', $symbol_thousand);
+            return $price.$symbol;
+        }
+    ?>
 </body>
 </html>
